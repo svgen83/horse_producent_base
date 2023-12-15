@@ -1,0 +1,31 @@
+{% extends 'index_template.html' %}
+
+{% block content %}
+
+    <div class="container">
+        <hr>
+				<h1>Информация о лошади</h1>
+    <p>
+       <h2>{{ horse.title }} </h2><br>
+			 {% if horse.image %}			 
+			 		<img src="{{horse.image.url}}" style="height:200px; width:200px"> <br>
+				{%else%}
+			изображение отстутствует <br>
+			 {% endif %}
+       пол {{ horse.sex }} <br>
+       Анамнез: {{ horse.anamnesis }} <br>
+       Дата рождения {{ horse.date_of_birth }} <br>
+			 {%if horse.date_of_death%}
+       {{ horse.date_of_death }} <br>
+			 {%else%}
+			В настоящий момент используется <br>
+			 {%endif%} 
+			 Дата начала эксплуатации {{ horse.commissioning_date }} <br>
+			 Используется уже  {{ commissioning_duratuon }} лет <br>
+			 Количество иммунизаций {{ immunisation_count }} <br>
+			 Количество осуществленных кровопусканий {{ bloodlets_count}}<br>
+			  Используемый антиген {{ antigen_type }} <br
+
+    </p>
+    </div>
+{% endblock %}

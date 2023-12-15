@@ -1,0 +1,35 @@
+{% extends 'index_template.html' %}
+
+{% block content %}
+
+        <a class="navbar" href="{% url 'calendar'%}">Календарь иммунизаций и кровопусканий</a>
+        <hr>
+				<h2> {{current_day_msg}}</h2>
+        <h2>Лошади-продуценты</h2>
+        <p>Всего лошадей продуцентов: {{ equines.count }}</p>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                    <th class="table-element">#</th>
+                    <th class="table-element">Кличка лошади</th>
+                    <th class="table-element">Год рождения</th>
+                    <th class="table-element">Год эксплуатации</th>
+										<th class="table-element">Лабораторная группа</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for equine in equines %}
+										
+                    <tr>
+                        <td class="table-element">{{ forloop.counter }}</td>
+                        <td class="table-element"><a href = "{% url 'horse' title=equine.title %}"><strong>{{ equine.title }}</strong></a></td>
+                        <td class="table-element">{{ equine.date_of_birth }}</td>
+                        <td class="table-element">{{ equine.commissioning_date }}</td>
+												<td class="table-element"> <a href = "{% url 'group' title=equine.lab_group %}"> {{ equine.lab_group }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+{% endblock %}

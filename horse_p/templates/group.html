@@ -1,0 +1,23 @@
+{% extends 'index_template.html' %}
+
+{% block content %}
+
+    <div class="container">
+        <hr>
+				<h2>Информация о лабораторных группах</h2>
+    <p>
+      Название группы {{ group.title }} <br>
+      Используемый антиген {{ group.antigen }} <br>
+      Сотрудники, обслуживающие группу <br>
+			{% for employee in group.employees.all %}
+			{{ employee.title }} <br>
+			{% endfor %}
+			<br>
+			В настоящий момент используется {{group.equine.count}} лошадей <br>
+			Лошади   <br>
+			{% for equine in group.equine.all %}
+      {{ equine.title }} <br>
+      {% endfor %}
+    </p>
+    </div>
+{% endblock %}

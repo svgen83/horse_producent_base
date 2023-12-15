@@ -1,0 +1,35 @@
+{% extends 'index_template.html' %}
+
+{% block content %}
+
+        <a class="navbar" href="{% url 'calendar'%}">Календарь иммунизаций и кровопусканий</a>
+        <hr>
+				<h2>{{antigen.title}} </h2>
+        <h3>Статистика</h3>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                    <th class="table-element">Месяц</th>
+                    <th class="table-element">Количество иммунизаций</th>
+                    <th class="table-element">Количество кровопусканий</th>
+										<th class="table-element">Объем антигена, мл</th>
+										<th class="table-element">Объем крови, л</th>
+                    </tr>
+                </thead>
+                <tbody>
+								{% for act_statistic in acts_statistic %}             		
+                    <tr>
+                        <td class="table-element">{{ forloop.counter}}</td>
+                        <td class="table-element">{{act_statistic.immunisation_counts}}</td>
+                        <td class="table-element">{{act_statistic.bloodlet_counts}}</td>
+                        <td class="table-element">{{act_statistic.antigen_volumes}}</td>
+												<td class="table-element">{{act_statistic.blood_volumes}}</td>
+                    </tr>
+                {% endfor%}
+                </tbody>
+            </table>
+        </div>
+				<h2>За {{year_period}} год проведено {{year_immunisations_count}} иммунизаций и {{year_bloodlets_count}} кровопусканий.</h2> 
+				<h2> Приготовлено {{year_antigen_volume}} мл антигена и получено {{year_blood_volume}} л крови </h2>
+{% endblock %}

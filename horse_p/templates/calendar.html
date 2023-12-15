@@ -1,0 +1,30 @@
+<{% extends 'index_template.html' %}
+ {% block content %}
+    <div class="container">
+        <hr>
+        <h2>Календарь иммунизаций и кровопусканий</h2>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                    <th class="table-element">#</th>
+                    <th class="table-element">Дата манипуляции</th>
+                    <th class="table-element">Группа</th>
+                    <th class="table-element">Манипуляция</th>
+										<th class="table-element">Объем</th
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for date in dates %}
+                    <tr>
+                        <td class="table-element">{{ forloop.counter }}</td>
+                            <td class="table-element"><strong>{{ date.date_manipulation }}</strong></td>
+                        <td class="table-element">{{ date.groups }}</td>
+                        <td class="table-element">{{ date.manipulations }}</td>
+												<td class="table-element">{{ date.manipulations.volume}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+		{% endblock %}
