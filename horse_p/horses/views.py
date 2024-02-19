@@ -7,6 +7,8 @@ from django.utils.timezone import localtime
 from horses.models import Equine, Lab_group, Employee, Calendar, Manipulation, Antigen 
 ##from django.views.generic.list import ListView
 from datetime import datetime, timedelta, date
+from django.contrib.auth.decorators import login_required
+
 
 
 def get_duration(current_date, initial_date, time_factor):
@@ -23,7 +25,7 @@ def get_duration(current_date, initial_date, time_factor):
 ##     return render(request, 'blog/personal_list.html', {'personals': personals})
 ##
 
- 
+@login_required 
 def index(request):
     try:
         current_date =  datetime.now().date()
