@@ -49,7 +49,7 @@ class AntigenAdmin(admin.ModelAdmin):
 
 @admin.register(Manipulation)
 class ManipulationAdmin(admin.ModelAdmin):
-    list_display = ['title', 'volume']
+    list_display = ['title', 'volume', 'volume_measure']
 
 
 @admin.register(Calendar)

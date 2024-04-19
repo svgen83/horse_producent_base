@@ -10,9 +10,6 @@ class Antigen(models.Model):
         'Краткое описание', blank=True)
     description_long = models.TextField(
         'Подробное описание', blank=True)
-    production_date = models.DateField(
-        verbose_name='дата приготовления',
-        blank=True, null = True)
     
     class Meta:
         verbose_name = 'Антиген'
@@ -23,13 +20,28 @@ class Antigen(models.Model):
 
 
 class Manipulation(models.Model):
+    MEASURE_CHOICE = (
+        ('ML', 'Объем, мл'),
+        ('L', 'Объем, л'),
+        ('C', 'млрд микробных клеток'),
+    )
     title = models.CharField(max_length=200,
                              verbose_name='Название манипуляции')
     description = models.TextField('Описание манипуляции',
                                    blank=True)
-    volume = models.CharField(max_length=200,
-                              verbose_name='Объем, мл',
-                              blank = "True")
+    volume = models.DecimalField(
+        max_digits = 10,
+        decimal_places = 3,
+        verbose_name='Количество',
+        blank=True, null=True)
+    volume_measure = models.CharField(
+        max_length=200,
+        verbose_name='Едииница измерения',
+        choices=MEASURE_CHOICE,
+        default='ML',
+        db_index=True,
+        blank = "True")
+    
     class Meta:
         verbose_name = 'Тип манипуляции'
         verbose_name_plural = 'Типы манипуляций'
@@ -84,18 +96,37 @@ class Lab_group(models.Model):
 
 
 class Equine(models.Model):
+    SEX_STATUS = (
+        ('M', 'Жеребец'),
+        ('F', 'Кобыла'),
+        ('G', 'Мерин'),
+    )
+
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=200,
                              verbose_name='Кличка')
-    sex = models.CharField(max_length=200,
-                           verbose_name='Пол',
-                           blank=True, null=True)
+    sex = models.CharField(max_length=4,
+                           choices=SEX_STATUS,
+                           default='M',
+                           db_index=True,
+                           verbose_name='Пол')
+    coat_color = models.CharField(max_length=200,
+                                  verbose_name='Масть лошади',
+                                  blank=True, null=True)
+    breed = models.CharField(max_length=200,
+                             verbose_name='Порода',
+                             blank=True, null=True)
+    purchase_place = models.CharField(max_length=200,
+                                      verbose_name='Место приобретения',
+                                      blank=True, null=True)
+    serum_activity = models.DecimalField(max_digits = 10,
+                                  decimal_places = 3,
+                                  verbose_name='Активность сыворотки',       
+                                  blank=True, null=True)
     image = models.ImageField(verbose_name='изображение',
                               upload_to='media',
                               blank=True, null=True
                               )
-    anamnesis = models.TextField(verbose_name='Анамнез',
-                                 blank=True, default='')
     date_of_birth = models.DateField(verbose_name='дата рождения')
     date_of_death = models.DateField(verbose_name='дата выбытия',
                                      blank=True, null=True)
