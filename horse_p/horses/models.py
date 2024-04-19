@@ -4,8 +4,9 @@ from django.db import models
 
 
 class Antigen(models.Model):
-    title = models.CharField(max_length=200,
-                             verbose_name='Наименование материала для иммунизации')
+    title = models.CharField(
+        max_length=200,
+        verbose_name='Наименование материала для иммунизации')
     description_short = models.TextField(
         'Краткое описание', blank=True)
     description_long = models.TextField(
@@ -73,8 +74,9 @@ class Employee(models.Model):
 
 
 class Lab_group(models.Model):
-    title = models.IntegerField(verbose_name='название группы')
-
+    #title = models.IntegerField(verbose_name='название группы')
+    title = models.CharField(max_length=200,
+                             verbose_name='название группы')
     antigen = models.ForeignKey(Antigen, on_delete = models.DO_NOTHING,
                                 related_name="antigen_group",
                                 blank = True, null = True,
