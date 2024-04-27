@@ -75,6 +75,7 @@ class Employee(models.Model):
 
 class Lab_group(models.Model):
     #title = models.IntegerField(verbose_name='название группы')
+    id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=200,
                              verbose_name='название группы')
     antigen = models.ForeignKey(Antigen, on_delete = models.DO_NOTHING,
@@ -132,7 +133,11 @@ class Equine(models.Model):
     date_of_birth = models.DateField(verbose_name='дата рождения')
     date_of_death = models.DateField(verbose_name='дата выбытия',
                                      blank=True, null=True)
-    commissioning_date = models.DateField(verbose_name='дата ввода в эксплутацию')
+    commissioning_date = models.DateField(
+        verbose_name='дата ввода в эксплутацию')
+    in_operation = models.BooleanField(
+        default=True,
+        verbose_name='используется ли лошадь')
     lab_group = models.ForeignKey(Lab_group,
                                   on_delete = models.DO_NOTHING,
                                   related_name='equine',
@@ -184,7 +189,12 @@ class Restriction(models.Model):
                               blank=True, default='')
     equine = models.ManyToManyField(Equine,
                                     verbose_name='Кличка лошади',
-                                    related_name="restriction_to_use")
+                                    related_name='restriction_to_use')
+    begin_restriction = models.DateField( blank=True,default='2024-01-01',
+        verbose_name='дата начала действия ограничения')
+    end_restriction = models.DateField( blank=True,default='2024-01-01',
+        verbose_name='дата завершения действия ограничения')
+    
     class Meta:
         verbose_name = 'Ограничение по эксплуатации'
         verbose_name_plural = 'Ограничения по эксплуатации'

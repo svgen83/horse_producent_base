@@ -4,9 +4,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from django.utils.timezone import localtime
 # Create your views here.
-from horses.models import Equine, Lab_group, Employee, Calendar, Manipulation, Antigen 
+from horses.models import (Equine, Lab_group, Employee,
+                           Calendar, Manipulation, Antigen, Restriction) 
 ##from django.views.generic.list import ListView
 from datetime import datetime, timedelta, date
+import pandas as pd
+from itertools import chain
 from django.contrib.auth.decorators import login_required
 
 
@@ -16,14 +19,6 @@ def get_duration(current_date, initial_date, time_factor):
     time_in_use = int(delta_time.total_seconds()/(60*60*24*365))
     return time_in_use
 
-
-##def personal_list(request):
-##     today = timezone.now().date()
-##     personals = Personal.objects.order_by('name').filter(
-##         birth_day__month=today.month,
-##         birth_day__day=today.day)
-##     return render(request, 'blog/personal_list.html', {'personals': personals})
-##
 
 @login_required 
 def index(request):
@@ -38,7 +33,8 @@ def index(request):
                                     осуществляется {calendar.manipulations}
                                     по {calendar.manipulations.volume} мл.
                                     Антиген {calendar.groups.antigen}''')
-        current_day_msg = "/s".join(current_day_msgs)
+##        current_day_msg = "/s".join(current_day_msgs)
+        current_day_msg = "в разработке"
     except ObjectDoesNotExist:
         current_day_msg = f'''Сегодня {current_date} манипуляций с лошадьми не производится'''
     finally:
@@ -62,17 +58,40 @@ def horse(request, id):
         current_date =  datetime.now().date()
         year = 60*60*24*365
         commissioning_duration = get_duration(current_date,
-                                              horse.commissioning_date, year)
+                                              horse.commissioning_date,
+                                              year)
 
         antigen_type = horse.lab_group.antigen
-        horse_acts = Calendar.objects.filter(
+        list_restrictions = []
+
+        restrictions = Restriction.objects.filter(equine=horse)
+        if restrictions:
+            restrictions_dates = []
+            for restriction in restrictions:
+                list_restrictions.append(
+                    {'title':restriction.title,
+                     'begin':restriction.begin_restriction,
+                     'end':restriction.end_restriction})
+            restrictions_dates.append(pd.date_range(
+                start=restriction.begin_restriction,
+                end=restriction.end_restriction).tolist())
+            restrictions_dates_p = list(
+                chain.from_iterable(restrictions_dates))
+            exclude_dates = [date.date() for date in restrictions_dates_p]
+            
+            horse_acts = Calendar.objects.filter(
+            groups__antigen__title__contains=antigen_type).filter(
+            groups=horse.lab_group).exclude(date_manipulation__in=exclude_dates)
+        else:
+            horse_acts = Calendar.objects.filter(
             groups__antigen__title__contains=antigen_type).filter(
             groups=horse.lab_group)
+
         immunisation_count = horse_acts.filter(
             manipulations__title__contains='ммунизац').count()
         bloodlets_count = horse_acts.filter(
             manipulations__title__contains='кров').count()
-
+        
         return render(request, "horse.html",
                       context={
                           'horse': horse,
@@ -109,24 +128,30 @@ def group(request, title):
 def get_volume_stat(actions):
     antigen_volumes = 0
     for action in actions:
+        date = action.date_manipulation
         group_number = action.groups
-        equines_in_group = Equine.objects.filter(lab_group__title__contains=group_number)
+        equines_in_group = Equine.objects.filter(
+            lab_group__title__contains=group_number).exclude(
+                restriction_to_use__end_restriction__gte=date,
+                restriction_to_use__begin_restriction__lte=date)
+        print(equines_in_group)
+       
         equines_in_group_count = equines_in_group.count()
-        antigen_volume = int(action.manipulations.volume)*equines_in_group_count
+        antigen_volume = int(
+            action.manipulations.volume)*equines_in_group_count
         antigen_volumes += antigen_volume
     return antigen_volumes
 
 
 def statistics(request, name):
+    year_period = 2024
 
     antigen = Antigen.objects.get(pk=name)
     
-    year_period = 2023
     rabies_horse_acts = Calendar.objects.filter(
         groups__antigen__title=antigen.title)
     acts_statistic = []
     equine_count = 0
-    print(rabies_horse_acts)
     year_antigen_volume = 0
     year_blood_volume = 0
     year_bloodlets_count = 0
@@ -136,14 +161,16 @@ def statistics(request, name):
         acts_in_month = rabies_horse_acts.filter(
             date_manipulation__year=year_period).filter(
                 date_manipulation__month=period)
-        immunisations = acts_in_month.filter(manipulations__title__contains='ммунизац')
+        
+        immunisations = acts_in_month.filter(
+            manipulations__title__contains='ммунизац')
         immunisations_count = immunisations.count()
 
         bloodlets = acts_in_month.filter(manipulations__title__contains='кров')
         bloodlets_count = bloodlets.count()
         
         antigen_volumes = get_volume_stat(immunisations)
-        blood_volumes = get_volume_stat(bloodlets)/1000
+        blood_volumes = get_volume_stat(bloodlets)
 
         act_statistic = {'immunisation_counts': immunisations_count,
                         'bloodlet_counts': bloodlets_count,
