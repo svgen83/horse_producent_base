@@ -7,10 +7,8 @@ class Antigen(models.Model):
     title = models.CharField(
         max_length=200,
         verbose_name='Наименование материала для иммунизации')
-    description_short = models.TextField(
-        'Краткое описание', blank=True)
-    description_long = models.TextField(
-        'Подробное описание', blank=True)
+    description = models.TextField(
+        'Описание', blank=True)
     
     class Meta:
         verbose_name = 'Антиген'
@@ -22,9 +20,9 @@ class Antigen(models.Model):
 
 class Manipulation(models.Model):
     MEASURE_CHOICE = (
-        ('ML', 'Объем, мл'),
-        ('L', 'Объем, л'),
-        ('C', 'млрд микробных клеток'),
+        ('мл', 'мл'),
+        ('л', 'л'),
+        ('млрд клеток', 'млрд клеток'),
     )
     title = models.CharField(max_length=200,
                              verbose_name='Название манипуляции')
@@ -37,7 +35,7 @@ class Manipulation(models.Model):
         blank=True, null=True)
     volume_measure = models.CharField(
         max_length=200,
-        verbose_name='Едииница измерения',
+        verbose_name='Единица измерения',
         choices=MEASURE_CHOICE,
         default='ML',
         db_index=True,
@@ -62,7 +60,7 @@ class Employee(models.Model):
     laboratory = models.CharField('Структурное подразделение', max_length=200)
     job_title = models.TextField('Должноcть', blank=True)
     duties = models.TextField('Должноcтные обязанности', blank=True)
-    manipulate_acts = models.ManyToManyField(Manipulation, related_name='employees')
+    manipulate_acts = models.ManyToManyField(Manipulation, related_name='employees', blank=True)
 
     class Meta:
         verbose_name = 'Сотрудник'
@@ -81,9 +79,10 @@ class Lab_group(models.Model):
     antigen = models.ForeignKey(Antigen, on_delete = models.DO_NOTHING,
                                 related_name="antigen_group",
                                 blank = True, null = True,
-                                verbose_name='Используемый материал для иммунизации' )
+                                verbose_name='Используемый материал для иммунизации')
     employees = models.ManyToManyField(Employee,
-                                 related_name='serviced_group')
+                                 related_name='serviced_group',
+                                 blank=True)
     def employee_names(self):
         return u" %s" % (u", ".join([employee.title for employee in self.employees.all()]))
     employee_names.short_description = u'Ответственные сотрудники'
@@ -159,12 +158,11 @@ class Calendar(models.Model):
         verbose_name='дата проведения манипуляции')
     groups = models.ForeignKey(Lab_group,
                                on_delete = models.DO_NOTHING,
-                               verbose_name='Рабочая группа',
-                               blank = 'True', null = 'True')
+                               verbose_name='Рабочая группа')
     manipulations = models.ForeignKey(Manipulation,
                                       on_delete = models.DO_NOTHING,
-                                      blank = 'True', null = 'True',
-                                      related_name='manipulation_date')
+                                      related_name='manipulation_date',
+                                      verbose_name='Название манипуляции')
     employe = models.ManyToManyField(Employee,
                                      verbose_name='Исполнители',
                                      related_name='action')
@@ -198,7 +196,7 @@ class Restriction(models.Model):
     class Meta:
         verbose_name = 'Ограничение по эксплуатации'
         verbose_name_plural = 'Ограничения по эксплуатации'
-        ordering = ['title']
+        ordering = ['begin_restriction']
     
 
 class Cure(models.Model):

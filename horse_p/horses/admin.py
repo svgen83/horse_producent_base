@@ -56,7 +56,7 @@ class ManipulationAdmin(admin.ModelAdmin):
 class CalendarAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.ManyToManyField: {'widget': CheckboxSelectMultiple},}
-    list_display = ['date_manipulation', 'get_category']
+    list_display = ['date_manipulation', 'manipulations', 'get_category']
 
 
 @admin.register(Lab_group)
@@ -72,7 +72,7 @@ class Lab_groupAdmin(admin.ModelAdmin):
 class RestrictionAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.ManyToManyField: {'widget': CheckboxSelectMultiple},}
-    list_display = ['title']
+    list_display = ['begin_restriction', 'end_restriction', 'title']
 
    
 @admin.register(Cure)

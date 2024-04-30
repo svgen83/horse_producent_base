@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path, include
-from horses import views, calendar_views
+from horses import views
 from django.contrib.staticfiles.urls import static
 from django.conf import settings
 from django.conf.urls.static import static
@@ -23,7 +23,7 @@ from django.contrib.auth import views as authViews
 
 urlpatterns = [
     re_path(r'^horse/(?P<id>\d+)/$', views.horse, name='horse'),
-    re_path(r'^group/(?P<title>\d+)/$', views.group, name='group'),
+    re_path(r'^group/(?P<title>\w+)/$', views.group, name='group'),
     re_path(r'^statistics/(?P<name>\d+)', views.statistics, name='statistics'),
     path('calendar', views.calendar, name='calendar'),
 ##    path('statistics', views.statistics, name='statistics'),

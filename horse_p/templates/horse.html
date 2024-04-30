@@ -10,21 +10,29 @@
 			 {% if horse.image %}			 
 			 		<img src="{{horse.image.url}}" style="height:200px; width:200px"> <br>
 				{%else%}
-			изображение отстутствует <br>
+			изображение отсутствует <br>
 			 {% endif %}
-       пол {{ horse.sex }} <br>
-       Анамнез: {{ horse.anamnesis }} <br>
+       Пол {{ horse.get_sex_display }}<br>
+       Порода {{ horse.breed }}<br>
+       Место приобретения {{ horse.purchase_place  }}<br>
+       Активность сыворотки {{ horse.serum_activity }}<br>
        Дата рождения {{ horse.date_of_birth }} <br>
-			 {%if horse.date_of_death%}
-       {{ horse.date_of_death }} <br>
-			 {%else%}
+	   {%if horse.date_of_death%}
+         {{ horse.date_of_death }} <br>
+		{%else%}
 			В настоящий момент используется <br>
-			 {%endif%} 
-			 Дата начала эксплуатации {{ horse.commissioning_date }} <br>
-			 Используется уже  {{ commissioning_duratuon }} лет <br>
-			 Количество иммунизаций {{ immunisation_count }} <br>
-			 Количество осуществленных кровопусканий {{ bloodlets_count}}<br>
-			  Используемый антиген {{ antigen_type }} <br
+		{%endif%} 
+		    Дата начала эксплуатации {{ horse.commissioning_date }} <br>
+			Используется уже  {{ commissioning_duratuon }} лет <br>
+			Количество иммунизаций {{ immunisation_count }} <br>
+			Количество осуществленных кровопусканий {{ bloodlets_count}}<br>
+			Используемый антиген {{ antigen_type }} <br>
+		{% if restrictions%}  			
+		  {% for restriction in restrictions %}
+		   Ограничения:<br>
+		    {{ restriction.title }} с {{ restriction.begin_restriction }} по {{ restriction.end_restriction }}  <br>
+		  {% endfor %}
+		{% endif %}
 
     </p>
     </div>

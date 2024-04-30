@@ -27,14 +27,17 @@ def index(request):
         equines = Equine.objects.all()
         employees = Employee.objects.all()
         current_day_msgs = []
-        calendar = Calendar.objects.get(date_manipulation=current_date)
-        current_day_msgs.append(f'''Сегодня {calendar}
+        calendars = Calendar.objects.filter(date_manipulation=current_date)
+        for calendar in calendars:
+            current_day_msgs.append(f'''Сегодня {calendar}
                                     в группе {calendar.groups}
                                     осуществляется {calendar.manipulations}
-                                    по {calendar.manipulations.volume} мл.
-                                    Антиген {calendar.groups.antigen}''')
-##        current_day_msg = "/s".join(current_day_msgs)
-        current_day_msg = "в разработке"
+                                    по {calendar.manipulations.volume}
+                                    {calendar.manipulations.volume_measure}.
+                                    Антиген {calendar.groups.antigen}.
+                                    ''')
+        current_day_msg = "\n".join(current_day_msgs)
+        print(current_day_msg)
     except ObjectDoesNotExist:
         current_day_msg = f'''Сегодня {current_date} манипуляций с лошадьми не производится'''
     finally:
@@ -65,13 +68,12 @@ def horse(request, id):
         list_restrictions = []
 
         restrictions = Restriction.objects.filter(equine=horse)
+        
+        for restriction in restrictions:
+            print(restriction.title)
+                
         if restrictions:
-            restrictions_dates = []
-            for restriction in restrictions:
-                list_restrictions.append(
-                    {'title':restriction.title,
-                     'begin':restriction.begin_restriction,
-                     'end':restriction.end_restriction})
+            restrictions_dates = []                     
             restrictions_dates.append(pd.date_range(
                 start=restriction.begin_restriction,
                 end=restriction.end_restriction).tolist())
@@ -91,7 +93,7 @@ def horse(request, id):
             manipulations__title__contains='ммунизац').count()
         bloodlets_count = horse_acts.filter(
             manipulations__title__contains='кров').count()
-        
+        #print(list_restrictions)
         return render(request, "horse.html",
                       context={
                           'horse': horse,
@@ -99,6 +101,7 @@ def horse(request, id):
                           'antigen_type': antigen_type,
                           'immunisation_count': immunisation_count,
                           'bloodlets_count': bloodlets_count,
+                          'restrictions': restrictions,
                            })
     except ObjectDoesNotExist:
         return HttpResponseNotFound('<h1>Такая лошадь не найдена</h1>')
@@ -126,21 +129,21 @@ def group(request, title):
 
 
 def get_volume_stat(actions):
-    antigen_volumes = 0
+    manipulate_volumes = 0
     for action in actions:
         date = action.date_manipulation
         group_number = action.groups
         equines_in_group = Equine.objects.filter(
             lab_group__title__contains=group_number).exclude(
                 restriction_to_use__end_restriction__gte=date,
-                restriction_to_use__begin_restriction__lte=date)
-        print(equines_in_group)
-       
+                restriction_to_use__begin_restriction__lte=date
+                ).exclude(date_of_death__lte=date)      
         equines_in_group_count = equines_in_group.count()
-        antigen_volume = int(
+        manipulate_volume = int(
             action.manipulations.volume)*equines_in_group_count
-        antigen_volumes += antigen_volume
-    return antigen_volumes
+        print(date, equines_in_group, manipulate_volume)
+        manipulate_volumes += manipulate_volume
+    return manipulate_volumes
 
 
 def statistics(request, name):
