@@ -72,8 +72,6 @@ class Employee(models.Model):
 
 
 class Lab_group(models.Model):
-    #title = models.IntegerField(verbose_name='название группы')
-    id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=200,
                              verbose_name='название группы')
     antigen = models.ForeignKey(Antigen, on_delete = models.DO_NOTHING,
@@ -117,14 +115,14 @@ class Equine(models.Model):
                                   blank=True, null=True)
     breed = models.CharField(max_length=200,
                              verbose_name='Порода',
-                             blank=True, null=True)
+                             default='Беспородная')
     purchase_place = models.CharField(max_length=200,
                                       verbose_name='Место приобретения',
-                                      blank=True, null=True)
+                                      default='Неизвестно')
     serum_activity = models.DecimalField(max_digits = 10,
                                   decimal_places = 3,
-                                  verbose_name='Активность сыворотки',       
-                                  blank=True, null=True)
+                                  verbose_name='Активность сыворотки',
+                                  default=0)
     image = models.ImageField(verbose_name='изображение',
                               upload_to='media',
                               blank=True, null=True
@@ -146,7 +144,7 @@ class Equine(models.Model):
     class Meta:
         verbose_name = 'Лошадь-продуцент'
         verbose_name_plural = 'Лошади-продуценты'
-        ordering = ['lab_group', 'title']
+        ordering = ['lab_group', 'title', 'commissioning_date']
 
     def __str__(self):
         return self.title 

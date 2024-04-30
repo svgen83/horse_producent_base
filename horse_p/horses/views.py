@@ -36,10 +36,10 @@ def index(request):
                                     {calendar.manipulations.volume_measure}.
                                     Антиген {calendar.groups.antigen}.
                                     ''')
-        current_day_msg = "\n".join(current_day_msgs)
-        print(current_day_msg)
+        #current_day_msg = "\n".join(current_day_msgs)
+        print(current_day_msgs)
     except ObjectDoesNotExist:
-        current_day_msg = f'''Сегодня {current_date} манипуляций с лошадьми не производится'''
+        current_day_msgs = [f'''Сегодня {current_date} манипуляций с лошадьми не производится''']
     finally:
         current_date =  datetime.now().date()
         equines = Equine.objects.all()
@@ -50,7 +50,7 @@ def index(request):
                       context={
                           'equines':equines,
                           'employees': employees,
-                          'current_day_msg': current_day_msg,
+                          'current_day_msgs': current_day_msgs,
                           'antigens': antigens,
                             })
 

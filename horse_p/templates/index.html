@@ -7,8 +7,10 @@
 				<a class="navbar" href="{% url 'statistics' name=antigen.pk %}">Статистика {{ antigen.title }}</a>
 				{% endfor %}
         <hr>
-				<h2> {{current_day_msg}}</h2>
-        <h2>Лошади-продуценты</h2>
+				{% for current_day_msg in current_day_msgs %}
+				<h5> {{current_day_msg}}</h5>
+				{% endfor %}
+        <h2 align="center">Лошади-продуценты</h2>
         <p>Всего лошадей продуцентов: {{ equines.count }}</p>
         <div class="table-responsive">
             <table class="table">
