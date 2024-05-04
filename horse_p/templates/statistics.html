@@ -7,8 +7,8 @@
 				<h2>{{antigen.title}} </h2>
         <h3>Статистика</h3>
         
-        <form method='get' action="">
-        <select name='year'>
+        <form method='post' action="">
+        <select select_year='year'>
         {% for year in years %}
              <option value="{{year}}">{{year}}</option>     
         {% endfor %}

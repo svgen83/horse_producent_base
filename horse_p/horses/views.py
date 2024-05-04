@@ -153,7 +153,9 @@ def statistics(request, name):
         years_.append((i.date_manipulation).year)
     years = list(dict.fromkeys(years_))
     print(years)
-    year_period = 2024
+    #year_period = 2024
+    year_period = request.POST.get("value")
+    print(year_period)
 
     antigen = Antigen.objects.get(pk=name)
     
