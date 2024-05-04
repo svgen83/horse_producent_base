@@ -147,6 +147,12 @@ def get_volume_stat(actions):
 
 
 def statistics(request, name):
+    dates = Calendar.objects.all()
+    years_ = []
+    for i in dates:
+        years_.append((i.date_manipulation).year)
+    years = list(dict.fromkeys(years_))
+    print(years)
     year_period = 2024
 
     antigen = Antigen.objects.get(pk=name)
@@ -189,6 +195,7 @@ def statistics(request, name):
                   "statistics.html",
                   context={'acts_statistic': acts_statistic,
                            'year_period': year_period,
+                           'years': years,
                            'year_antigen_volume': year_antigen_volume,
                            'year_blood_volume': year_blood_volume,
                            'year_bloodlets_count': year_bloodlets_count,

@@ -6,6 +6,15 @@
         <hr>
 				<h2>{{antigen.title}} </h2>
         <h3>Статистика</h3>
+        
+        <form method='get' action="">
+        <select name='year'>
+        {% for year in years %}
+             <option value="{{year}}">{{year}}</option>     
+        {% endfor %}
+        </select>
+        </form>
+        
         <div class="table-responsive">
             <table class="table">
                 <thead>
