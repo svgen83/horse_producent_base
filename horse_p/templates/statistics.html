@@ -8,11 +8,13 @@
         <h3>Статистика</h3>
         
         <form method='post' action="">
-        <select select_year='year'>
-        {% for year in years %}
+            {% csrf_token %}
+            <select name ='year'>
+            {% for year in years %}
              <option value="{{year}}">{{year}}</option>     
-        {% endfor %}
-        </select>
+            {% endfor %}
+            </select>
+            <input type="submit" value="Выбрать год"/>
         </form>
         
         <div class="table-responsive">

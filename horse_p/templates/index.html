@@ -3,9 +3,9 @@
 {% block content %}
 
         <a class="navbar" href="{% url 'calendar'%}">Календарь иммунизаций и кровопусканий</a>
-				{% for antigen in antigens %}
-				<a class="navbar" href="{% url 'statistics' name=antigen.pk %}">Статистика {{ antigen.title }}</a>
-				{% endfor %}
+{% for antigen in antigens %}
+<a class="navbar" href="{% url 'statistics' name=antigen.pk %}">Статистика {{ antigen.title }}</a>
+{% endfor %}
         <hr>
 				{% for current_day_msg in current_day_msgs %}
 				<h5> {{current_day_msg}}</h5>
@@ -20,7 +20,7 @@
                     <th class="table-element">Кличка лошади</th>
                     <th class="table-element">Год рождения</th>
                     <th class="table-element">Год эксплуатации</th>
-										<th class="table-element">Лабораторная группа</th>
+					<th class="table-element">Лабораторная группа</th>
                     </tr>
                 </thead>
                 <tbody>
