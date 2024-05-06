@@ -132,7 +132,6 @@ def get_volume_stat(actions):
         equines_in_group_count = equines_in_group.count()
         manipulate_volume = int(
             action.manipulations.volume)*equines_in_group_count
-        print(date, equines_in_group, manipulate_volume)
         manipulate_volumes += manipulate_volume
     return manipulate_volumes
 
@@ -147,7 +146,7 @@ def statistics(request, name):
 
     antigen = Antigen.objects.get(pk=name)
 
-    rabies_horse_acts = Calendar.objects.filter(
+    horse_acts = Calendar.objects.filter(
         groups__antigen__title=antigen.title)
     acts_statistic = []
     year_antigen_volume = 0
@@ -156,7 +155,7 @@ def statistics(request, name):
     year_immunisations_count = 0
 
     for period in range(1, 13):
-        acts_in_month = rabies_horse_acts.filter(
+        acts_in_month = horse_acts.filter(
             date_manipulation__year=year_period).filter(
                 date_manipulation__month=period)
 
@@ -192,4 +191,5 @@ def statistics(request, name):
                       'year_bloodlets_count': year_bloodlets_count,
                       'year_immunisations_count': year_immunisations_count,
                       'antigen': antigen,
+                      'antigen_measure': antigen.volume_measure,
                            })

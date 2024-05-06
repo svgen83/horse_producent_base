@@ -4,11 +4,23 @@ from django.db import models
 
 
 class Antigen(models.Model):
+    MEASURE_CHOICE = (
+        ('мл', 'мл'),
+        ('л', 'л'),
+        ('млрд клеток', 'млрд клеток'),
+    )
     title = models.CharField(
         max_length=200,
         verbose_name='Наименование материала для иммунизации')
     description = models.TextField(
         'Описание', blank=True)
+    volume_measure = models.CharField(
+        max_length=200,
+        verbose_name='Единица измерения',
+        choices=MEASURE_CHOICE,
+        default='мл',
+        db_index=True,
+        blank="True")
 
     class Meta:
         verbose_name = 'Антиген'
@@ -38,7 +50,7 @@ class Manipulation(models.Model):
         max_length=200,
         verbose_name='Единица измерения',
         choices=MEASURE_CHOICE,
-        default='ML',
+        default='мл',
         db_index=True,
         blank="True")
 
