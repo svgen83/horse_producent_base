@@ -6,16 +6,16 @@
         <hr>
 				<h2>Информация о лабораторных группах</h2>
     <p>
-      Название группы {{ group.title }} <br>
-      Используемый антиген {{ group.antigen }} <br>
-      Сотрудники, обслуживающие группу <br>
+      <strong>Название группы</strong> {{ group.title }} <br>
+      <strong>Используемый антиген</strong>  {{ group.antigen }} <br>
+      <strong>Сотрудники, обслуживающие группу</strong>  <br>
 			{% for employee in group.employees.all %}
-			{{ employee.title }} <br>
+			{{ employee.title }} <strong>({{ employee.laboratory }})</strong> <br>
 			{% endfor %}
 			<br>
-			В настоящий момент используется {{group.equine.count}} лошадей <br>
-			Лошади   <br>
-			{% for equine in group.equine.all %}
+			В настоящий момент используется <strong>{{equines_in_use.count}}</strong> лошадей <br>
+			<strong>Используемые лошади</strong>   <br>
+			{% for equine in equines_in_use %}
       {{ equine.title }} <br>
       {% endfor %}
     </p>

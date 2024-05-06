@@ -7,30 +7,30 @@
 				<h1>Информация о лошади</h1>
     <p>
        <h2>{{ horse.title }} </h2><br>
-			 {% if horse.image %}			 
+			{% if horse.image %}			 
 			 		<img src="{{horse.image.url}}" style="height:200px; width:200px"> <br>
-				{%else%}
-			изображение отсутствует <br>
-			 {% endif %}
-       Пол {{ horse.get_sex_display }}<br>
-       Порода {{ horse.breed }}<br>
-       Место приобретения {{ horse.purchase_place  }}<br>
-       Активность сыворотки {{ horse.serum_activity }}<br>
-       Дата рождения {{ horse.date_of_birth }} <br>
+			  {%else%}
+			  <strong>Изображение отсутствует</strong> <br>
+			{% endif %}
+		<strong>Пол</strong> {{ horse.get_sex_display }}<br>
+        <strong>Порода</strong> {{ horse.breed }}<br>
+        <strong>Место приобретения</strong> {{ horse.purchase_place  }}<br>
+		<strong>Активность сыворотки</strong> {{ horse.serum_activity }}<br>
+        <strong>Дата рождения</strong> {{ horse.date_of_birth }} <br>
 	   {%if horse.date_of_death%}
-         {{ horse.date_of_death }} <br>
+	   <strong>Дата выбытия</strong>{{ horse.date_of_death }} <br>
 		{%else%}
 			В настоящий момент используется <br>
 		{%endif%} 
-		    Дата начала эксплуатации {{ horse.commissioning_date }} <br>
-			Используется уже  {{ commissioning_duratuon }} лет <br>
-			Количество иммунизаций {{ immunisation_count }} <br>
-			Количество осуществленных кровопусканий {{ bloodlets_count}}<br>
-			Используемый антиген {{ antigen_type }} <br>
+		<strong>Дата начала эксплуатации</strong> {{ horse.commissioning_date }} <br>
+		<strong>Используется в течение </strong>  {{ commissioning_duratuon }} лет <br>
+		<strong>Количество иммунизаций</strong> {{ immunisation_count }} <br>
+		<strong>Выполнено кровопусканий</strong> {{ bloodlets_count}}<br>
+		<strong>Используемый антиген</strong> {{ antigen_type }} <br>
 		{% if restrictions%}  			
 		  {% for restriction in restrictions %}
-		   Ограничения:<br>
-		    {{ restriction.title }} с {{ restriction.begin_restriction }} по {{ restriction.end_restriction }}  <br>
+		  <strong>Перенесенные ограничения по эксплуатации</strong> <br>
+		    {{ restriction.title }} с {{ restriction.begin_restriction }} по {{ restriction.end_restriction }} <br>
 		  {% endfor %}
 		{% endif %}
 

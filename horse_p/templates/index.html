@@ -31,7 +31,7 @@
                         <td class="table-element"><a href = "{% url 'horse' id=equine.id %}"><strong>{{ equine.title }}</strong></a></td>
                         <td class="table-element">{{ equine.date_of_birth }}</td>
                         <td class="table-element">{{ equine.commissioning_date }}</td>
-												<td class="table-element"> <a href = "{% url 'group' title=equine.lab_group %}"> {{ equine.lab_group }}</td>
+						<td class="table-element"> <a href = "{% url 'group' title=equine.lab_group %}"> {{ equine.lab_group }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
