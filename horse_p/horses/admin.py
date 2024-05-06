@@ -7,9 +7,6 @@ from adminsortable2.admin import SortableInlineAdminMixin
 
 from .models import Equine, Employee, Antigen, Manipulation
 from .models import Calendar, Lab_group, Restriction, Cure
-# Register your models here.
-
-
 
 
 class EquineInline(SortableInlineAdminMixin, admin.TabularInline):
@@ -20,7 +17,7 @@ class EquineInline(SortableInlineAdminMixin, admin.TabularInline):
     def headshot_image(self, obj):
         return format_html('<img src="{}" style="max-height: {height}px";>',
                            mark_safe(obj.image.url), height=200)
-    
+
     headshot_image.short_description = 'Preview'
 
 
@@ -31,7 +28,7 @@ class EquineAdmin(SortableInlineAdminMixin, admin.ModelAdmin):
 
     def preview(self, obj):
         return mark_safe(f'<img src="{obj.image.url}">')
-   
+
 
 @admin.register(Employee)
 class EmployeeAdmin(admin.ModelAdmin):
@@ -55,26 +52,26 @@ class ManipulationAdmin(admin.ModelAdmin):
 @admin.register(Calendar)
 class CalendarAdmin(admin.ModelAdmin):
     formfield_overrides = {
-        models.ManyToManyField: {'widget': CheckboxSelectMultiple},}
+        models.ManyToManyField: {'widget': CheckboxSelectMultiple}, }
     list_display = ['date_manipulation', 'manipulations', 'get_category']
 
 
 @admin.register(Lab_group)
 class Lab_groupAdmin(admin.ModelAdmin):
     formfield_overrides = {
-        models.ManyToManyField: {'widget': CheckboxSelectMultiple},}
+        models.ManyToManyField: {'widget': CheckboxSelectMultiple}, }
     list_display = ['title', 'antigen', 'employee_names']
     inlines = [
-        EquineInline,]
+        EquineInline, ]
 
 
 @admin.register(Restriction)
 class RestrictionAdmin(admin.ModelAdmin):
     formfield_overrides = {
-        models.ManyToManyField: {'widget': CheckboxSelectMultiple},}
+        models.ManyToManyField: {'widget': CheckboxSelectMultiple}, }
     list_display = ['begin_restriction', 'end_restriction', 'title']
 
-   
+
 @admin.register(Cure)
 class CureAdmin(admin.ModelAdmin):
     list_display = ['title']
