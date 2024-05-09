@@ -169,10 +169,12 @@ def statistics(request, name):
                 date_manipulation__month=period)
 
         immunisations = acts_in_month.filter(
-            manipulations__title__contains='ммунизац')
+            manipulations__title__icontains='ммунизац')
         immunisations_count = immunisations.count()
 
-        bloodlets = acts_in_month.filter(manipulations__title__contains='кров')
+        bloodlets = acts_in_month.filter(
+            manipulations__title__icontains='кров').exclude(
+                manipulations__title__icontains='пробирк')
         bloodlets_count = bloodlets.count()
 
         antigen_volumes = get_volume_stat(immunisations)
