@@ -53,7 +53,8 @@ class ManipulationAdmin(admin.ModelAdmin):
 class CalendarAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.ManyToManyField: {'widget': CheckboxSelectMultiple}, }
-    list_display = ['date_manipulation', 'manipulations', 'get_category']
+    list_display = ['date_manipulation', 'manipulations',
+    'groups', 'get_employees']
 
 
 @admin.register(Lab_group)

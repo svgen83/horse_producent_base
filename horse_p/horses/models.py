@@ -194,9 +194,9 @@ class Calendar(models.Model):
         verbose_name_plural = 'Даты проведения процедуры'
         ordering = ['date_manipulation', 'groups']
 
-    def get_category(self):
+    def get_employees(self):
         return ",".join([str(item) for item in self.employe.all()])
-    get_category.short_description = u'Ответственные сотрудники'
+    get_employees.short_description = u'Ответственные сотрудники'
 
     def __str__(self):
         return str(self.date_manipulation)

@@ -10,18 +10,28 @@
                     <th class="table-element">#</th>
                     <th class="table-element">Дата манипуляции</th>
                     <th class="table-element">Группа</th>
-                    <th class="table-element">Манипуляция</th>
+                    <th class="table-element">Манипуляции</th>
 					<th class="table-element">Количество</th
                     </tr>
                 </thead>
                 <tbody>
-                    {% for date in dates %}
+                    {% for items in dates %}
+                    
                     <tr>
                         <td class="table-element">{{ forloop.counter }}</td>
-                        <td class="table-element"><strong>{{ date.date_manipulation }}</strong></td>
-                        <td class="table-element">{{ date.groups }}</td>
-                        <td class="table-element">{{ date.manipulations }}</td>
-						<td class="table-element">{{ date.manipulations.volume}} {{ date.manipulations.volume_measure}}</td>
+                        <td class="table-element"><strong>{{ items.date_manipulation }}</strong></td>
+                        <td class="table-element">
+                        {% for item in items.objects %}
+                        {{ item.groups }} <br>
+                        {% endfor %}</td>
+                        <td class="table-element">
+                        {% for item in items.objects %}
+                        {{ item.manipulations }} <br>
+                        {% endfor %}</td>
+						<td class="table-element">
+						{% for item in items.objects %}
+                        {{ item.manipulations.volume }} {{ item.manipulations.volume_measure}} <br>
+                        {% endfor %}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

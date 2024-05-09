@@ -7,6 +7,7 @@ from datetime import datetime
 import pandas as pd
 from itertools import chain
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count, Case, When, IntegerField
 
 
 def get_duration(current_date, initial_date, time_factor):
@@ -95,9 +96,17 @@ def horse(request, id):
         return HttpResponseNotFound('<h1>Такая лошадь не найдена</h1>')
 
 
-def calendar(request):
-    dates = Calendar.objects.all()
-
+def calendar(request):    
+    duplicates = Calendar.objects.values('date_manipulation'
+    ).annotate(date_count=Count('date_manipulation')).filter(date_count__gte=1
+    ).order_by('date_manipulation').reverse()
+    dates = []
+    for duplicate in duplicates:
+        record = {'date_manipulation': duplicate['date_manipulation'],
+                  'objects': Calendar.objects.filter(
+                       date_manipulation__in=[duplicate['date_manipulation']]),
+                       }              
+        dates.append(record)
     return render(request,
                   "calendar.html",
                   context={'dates': dates,
