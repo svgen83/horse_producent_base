@@ -196,6 +196,7 @@ class Calendar(models.Model):
 
     def get_employees(self):
         return ",".join([str(item) for item in self.employe.all()])
+    
     get_employees.short_description = u'Ответственные сотрудники'
 
     def __str__(self):
