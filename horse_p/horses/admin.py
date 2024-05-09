@@ -25,6 +25,7 @@ class EquineInline(SortableInlineAdminMixin, admin.TabularInline):
 class EquineAdmin(SortableInlineAdminMixin, admin.ModelAdmin):
     list_display = ['title', 'lab_group', 'image']
     readonly_fields = ["preview"]
+    list_filter = ['lab_group', 'breed', 'purchase_place', 'in_operation']
 
     def preview(self, obj):
         return mark_safe(f'<img src="{obj.image.url}">')
@@ -55,6 +56,8 @@ class CalendarAdmin(admin.ModelAdmin):
         models.ManyToManyField: {'widget': CheckboxSelectMultiple}, }
     list_display = ['date_manipulation', 'manipulations',
     'groups', 'get_employees']
+    list_filter = ['date_manipulation', 'manipulations',
+    'groups']
 
 
 @admin.register(Lab_group)
@@ -71,6 +74,9 @@ class RestrictionAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.ManyToManyField: {'widget': CheckboxSelectMultiple}, }
     list_display = ['begin_restriction', 'end_restriction', 'title']
+    list_filter = ['begin_restriction', 'end_restriction', 'title']
+    search_fields = ['equine__title', 'title',
+                     'begin_restriction', 'end_restriction']
 
 
 @admin.register(Cure)
