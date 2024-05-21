@@ -77,7 +77,7 @@ def horse(request, id):
         else:
             horse_acts = Calendar.objects.filter(
                 groups__antigen__title__contains=antigen_type).filter(
-                    groups=horse.lab_group)
+                    groups=horse.lab_group) 
 
         immunisation_count = horse_acts.filter(
             manipulations__title__contains='ммунизац').count()
@@ -130,6 +130,7 @@ def group(request, title):
 
 def get_volume_stat(actions):
     manipulate_volumes = 0
+    equines_count = 0
     for action in actions:
         date = action.date_manipulation
         group_number = action.groups
@@ -139,10 +140,10 @@ def get_volume_stat(actions):
                 restriction_to_use__begin_restriction__lte=date
                 ).exclude(date_of_death__lte=date)
         equines_in_group_count = equines_in_group.count()
-        manipulate_volume = int(
-            action.manipulations.volume)*equines_in_group_count
+        manipulate_volume = action.manipulations.volume*equines_in_group_count
         manipulate_volumes += manipulate_volume
-    return manipulate_volumes
+        equines_count += equines_in_group_count
+    return manipulate_volumes,equines_count 
 
 
 def statistics(request, name):
@@ -162,7 +163,7 @@ def statistics(request, name):
     year_blood_volume = 0
     year_bloodlets_count = 0
     year_immunisations_count = 0
-
+ 
     for period in range(1, 13):
         acts_in_month = horse_acts.filter(
             date_manipulation__year=year_period).filter(
@@ -177,20 +178,25 @@ def statistics(request, name):
                 manipulations__title__icontains='пробирк')
         bloodlets_count = bloodlets.count()
 
-        antigen_volumes = get_volume_stat(immunisations)
-        blood_volumes = get_volume_stat(bloodlets)
+        antigen_volumes, antigen_horse_count = get_volume_stat(immunisations)
+        blood_volumes, blood_horse_count = get_volume_stat(bloodlets)
 
         act_statistic = {
             'immunisation_counts': immunisations_count,
             'bloodlet_counts': bloodlets_count,
             'antigen_volumes': antigen_volumes,
-            'blood_volumes': blood_volumes}
+            'blood_volumes': blood_volumes,
+            'antigen_horse_count': antigen_horse_count,
+            'blood_horse_count': blood_horse_count,
+            }
         acts_statistic.append(act_statistic)
 
         year_antigen_volume += antigen_volumes
         year_blood_volume += blood_volumes
-        year_bloodlets_count += bloodlets_count
-        year_immunisations_count += immunisations_count
+##        year_bloodlets_count += bloodlets_count
+##        year_immunisations_count += immunisations_count
+        year_bloodlets_count += blood_horse_count
+        year_immunisations_count += antigen_horse_count
     return render(request,
                   "statistics.html",
                   context={

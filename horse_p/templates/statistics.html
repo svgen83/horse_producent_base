@@ -22,8 +22,10 @@
                 <thead>
                     <tr>
                     <th class="table-element">Месяц</th>
-                    <th class="table-element">Количество иммунизаций</th>
-                    <th class="table-element">Количество кровопусканий</th>
+                    <th class="table-element">Количество иммунизаций (по группам)</th>
+                    <th class="table-element">Количество кровопусканий (по группам)</th>
+										<th class="table-element">Количество иммунизаций (по лошадям)</th>
+                    <th class="table-element">Количество кровопусканий (по лошадям)</th>
 										<th class="table-element">Количество антигена</th>
 										<th class="table-element">Объем крови</th>
                     </tr>
@@ -34,6 +36,8 @@
                         <td class="table-element">{{ forloop.counter}}</td>
                         <td class="table-element">{{act_statistic.immunisation_counts}}</td>
                         <td class="table-element">{{act_statistic.bloodlet_counts}}</td>
+												<td class="table-element">{{act_statistic.antigen_horse_count}}</td>
+                        <td class="table-element">{{act_statistic.blood_horse_count}}</td>
                         <td class="table-element">{{act_statistic.antigen_volumes}}</td>
 												<td class="table-element">{{act_statistic.blood_volumes}}</td>
                     </tr>
